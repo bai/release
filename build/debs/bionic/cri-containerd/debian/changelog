@@ -1,0 +1,5 @@
+cri-containerd ({{ .Version }}-{{ .Revision }}) {{ .DistroName }} {{ .Arch }}; urgency=optional
+
+  * https://github.com/containerd/containerd
+
+ -- Kubernetes Authors <kubernetes-dev@googlegroups.com>  {{ date }}

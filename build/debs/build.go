@@ -25,6 +25,7 @@ const (
 
 	cniVersion         = "0.7.5"
 	criToolsVersion    = "1.13.0"
+	criVersion         = "1.3.0-rc.2"
 	pre180kubeadmconf  = "pre-1.8/10-kubeadm.conf"
 	pre1110kubeadmconf = "post-1.8/10-kubeadm.conf"
 	latestkubeadmconf  = "post-1.10/10-kubeadm.conf"
@@ -269,6 +270,10 @@ func getCRIToolsLatestVersion() (string, error) {
 	return criToolsVersion, nil
 }
 
+func getCRIContainerdLatestVersion() (string, error) {
+	return criVersion, nil
+}
+
 func getLatestKubeCIBuild() (string, error) {
 	return fetchVersion("https://dl.k8s.io/ci/k8s-master.txt")
 }
@@ -505,6 +510,27 @@ func main() {
 				},
 			},
 		},
+		{
+			Package: "cri-containerd",
+			Distros: distros,
+			Versions: []version{
+				{
+					GetVersion: getCRIContainerdLatestVersion,
+					Revision:   revision,
+					Channel:    ChannelStable,
+				},
+				{
+					GetVersion: getCRIContainerdLatestVersion,
+					Revision:   revision,
+					Channel:    ChannelUnstable,
+				},
+				{
+					GetVersion: getCRIContainerdLatestVersion,
+					Revision:   revision,
+					Channel:    ChannelNightly,
+				},
+			},
+		},
 	}
 
 	if kubeVersion != "" {
@@ -565,6 +591,17 @@ func main() {
 				Versions: []version{
 					{
 						GetVersion: getCRIToolsLatestVersion,
+						Revision:   revision,
+						Channel:    ChannelStable,
+					},
+				},
+			},
+			{
+				Package: "cri-containerd",
+				Distros: distros,
+				Versions: []version{
+					{
+						GetVersion: getCRIContainerdLatestVersion,
 						Revision:   revision,
 						Channel:    ChannelStable,
 					},

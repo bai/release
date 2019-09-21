@@ -1,0 +1,15 @@
+Source: cri-containerd
+Section: misc
+Priority: optional
+Maintainer: Kubernetes Authors <kubernetes-dev+release@googlegroups.com>
+Build-Depends: curl, ca-certificates, debhelper (>= 8.0.0), dh-systemd (>= 1.5)
+Standards-Version: 3.9.4
+Homepage: https://containerd.io
+Vcs-Git: https://https://github.com/containerd/containerd.git
+Vcs-Browser: https://github.com/containerd/containerd
+
+Package: cri-containerd
+Architecture: {{ .DebArch }}
+Depends: ${shlibs:Depends}, ${misc:Depends}
+Description: Container Runtime
+ Industry-standard container runtime with an emphasis on simplicity, robustness and portability.

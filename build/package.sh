@@ -71,7 +71,7 @@ mkdir -p "${OUTPUT_DIR}"
 
 case "${PACKAGE_TYPE}" in
 "debs")
-  "${docker_run_cmd[@]}" --rm -v "${OUTPUT_DIR}:/src/bin" "${IMG_NAME}" "$@"
+  "${docker_run_cmd[@]}" --rm -v "${OUTPUT_DIR}:/home/builder/workspace/bin" "${IMG_NAME}" "$@"
   echo
   echo "----------------------------------------"
   echo

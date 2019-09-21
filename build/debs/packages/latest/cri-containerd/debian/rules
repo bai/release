@@ -1,0 +1,24 @@
+#!/usr/bin/make -f
+# -*- makefile -*-
+
+build:
+	echo noop
+
+binary:
+	curl -sSL --fail --retry 5 \
+		"https://storage.googleapis.com/cri-containerd-release/cri-containerd-{{ .Version }}.linux-{{ .Arch }}.tar.gz" \
+		| tar -C ./ -xz
+	dh_testroot
+	dh_auto_install
+	dh_shlibdeps
+	dh_install
+	dh_systemd_enable
+	dh_installinit
+	dh_systemd_start
+	dh_installdeb
+	dh_gencontrol
+	dh_md5sums
+	dh_builddeb
+
+%:
+	dh $@ --with systemd

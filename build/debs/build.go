@@ -107,8 +107,9 @@ var (
 	kubeVersion     string
 	cniVersion      string
 	criToolsVersion string
+	cntdVersion     string
 
-	packages      = stringList{"kubelet", "kubectl", "kubeadm", "kubernetes-cni", "cri-tools"}
+	packages      = stringList{"kubelet", "kubectl", "kubeadm", "kubernetes-cni", "cri-tools", "cri-containerd"}
 	channels      = stringList{"release", "testing", "nightly"}
 	architectures = stringList{"amd64", "arm", "arm64", "ppc64le", "s390x"}
 
@@ -131,6 +132,7 @@ func init() {
 	flag.StringVar(&revision, "revision", defaultRevision, "deb package revision.")
 	flag.StringVar(&cniVersion, "cni-version", "", "CNI version to build")
 	flag.StringVar(&criToolsVersion, "cri-tools-version", "", "CRI tools version to build")
+	flag.StringVar(&cntdVersion, "cri-containerd-version", "", "cri-containerd version to build")
 	flag.StringVar(&releaseDownloadLinkBase, "release-download-link-base", "https://dl.k8s.io", "release download link base.")
 }
 
@@ -140,7 +142,7 @@ func main() {
 	// Replace the "+" with a "-" to make it semver-compliant
 	kubeVersion = strings.TrimPrefix(kubeVersion, "v")
 
-	builds, err := constructBuilds(packages, channels, kubeVersion, revision, cniVersion)
+	builds, err := constructBuilds(packages, channels, kubeVersion, revision, cniVersion, cntdVersion)
 	if err != nil {
 		log.Fatalf("err: %v", err)
 	}
@@ -150,7 +152,7 @@ func main() {
 	}
 }
 
-func constructBuilds(packages, channels []string, kubeVersion, revision, cniVersion string) ([]build, error) {
+func constructBuilds(packages, channels []string, kubeVersion, revision, cniVersion, cntdVersion string) ([]build, error) {
 	var builds []build
 
 	for _, pkg := range packages {
@@ -171,6 +173,8 @@ func constructBuilds(packages, channels []string, kubeVersion, revision, cniVers
 				packageDef.Version = cniVersion
 			case "cri-tools":
 				packageDef.Version = criToolsVersion
+			case "cri-containerd":
+				packageDef.Version = cntdVersion
 			}
 
 			b.Definitions = append(b.Definitions, *packageDef)
@@ -381,6 +385,8 @@ func getPackageVersion(packageDef packageDefinition) (string, error) {
 		return getCNIVersion(packageDef)
 	case "cri-tools":
 		return getCRIToolsVersion(packageDef)
+	case "cri-containerd":
+		return getCRIContainerdVersion(packageDef)
 	}
 
 	log.Printf("using Kubernetes version")
@@ -546,6 +552,12 @@ func fetchReleases(owner, repo string, includePrereleases bool) ([]*github.Repos
 	}
 
 	return releases, nil
+}
+
+func getCRIContainerdVersion(packageDef packageDefinition) (string, error) {
+	log.Printf("using cri-containerd version")
+
+	return cntdVersion, nil
 }
 
 func getDownloadLinkBase(packageDef packageDefinition) (string, error) {

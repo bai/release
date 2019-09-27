@@ -24,8 +24,8 @@ const (
 	ChannelNightly  ChannelType = "nightly"
 
 	cniVersion         = "0.7.5"
-	criToolsVersion    = "1.13.0"
-	criVersion         = "1.3.0-rc.2"
+	criToolsVersion    = "1.16.1"
+	criVersion         = "1.3.0"
 	pre180kubeadmconf  = "pre-1.8/10-kubeadm.conf"
 	pre1110kubeadmconf = "post-1.8/10-kubeadm.conf"
 	latestkubeadmconf  = "post-1.10/10-kubeadm.conf"
